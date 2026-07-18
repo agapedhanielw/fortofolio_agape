@@ -1,0 +1,61 @@
+{% extends 'admin/base.html' %}
+
+{% block content %}
+<div class="header-section">
+    <h1>Kelola Skill</h1>
+    <p>Tambahkan keahlian teknis (seperti Python, HTML, CSS) dan ikonnya di sini.</p>
+</div>
+
+{% if pesan %}
+    <div style="background: #d4edda; color: #155724; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
+        {{ pesan }}
+    </div>
+{% endif %}
+
+<!-- Form Tambah Skill -->
+<div class="card" style="margin-bottom: 30px;">
+    <h3>Tambah Skill Baru</h3>
+    <form method="POST" action="/admin/skills">
+        <div style="display: flex; gap: 20px;">
+            <div class="input-group" style="flex: 1;">
+                <label>Nama Skill (Contoh: React JS)</label>
+                <input type="text" name="nama_skill" placeholder="Masukkan nama skill" required>
+            </div>
+            <div class="input-group" style="flex: 1;">
+                <label>Class Ikon (Opsional)</label>
+                <input type="text" name="icon_class" placeholder="Contoh: fa-brands fa-python">
+            </div>
+        </div>
+        <button type="submit" class="btn-action">Tambah Skill</button>
+    </form>
+</div>
+
+<!-- Tabel Daftar Skill -->
+<div class="card">
+    <h3>Daftar Skill Saya</h3>
+    <table style="width: 100%; border-collapse: collapse; margin-top: 15px;">
+        <tr style="background: #f4f4f9; text-align: left;">
+            <th style="padding: 12px; border-bottom: 2px solid #ddd;">No</th>
+            <th style="padding: 12px; border-bottom: 2px solid #ddd;">Nama Skill</th>
+            <th style="padding: 12px; border-bottom: 2px solid #ddd;">Class Ikon</th>
+            <th style="padding: 12px; border-bottom: 2px solid #ddd;">Aksi</th>
+        </tr>
+        
+        {% for s in skills %}
+        <tr>
+            <td style="padding: 12px; border-bottom: 1px solid #ddd;">{{ loop.index }}</td>
+            <td style="padding: 12px; border-bottom: 1px solid #ddd; font-weight: bold;">{{ s[2] }}</td>
+            <td style="padding: 12px; border-bottom: 1px solid #ddd;">{{ s[3] }}</td>
+            <td style="padding: 12px; border-bottom: 1px solid #ddd;">
+                <!-- Tombol Hapus dengan konfirmasi -->
+                <a href="/admin/skills/delete/{{ s[0] }}" style="color: white; background: #dc3545; padding: 6px 12px; border-radius: 4px; text-decoration: none; font-size: 0.9rem;" onclick="return confirm('Yakin ingin menghapus skill {{ s[2] }}?')">Hapus</a>
+            </td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="4" style="padding: 15px; text-align: center; color: #666;">Belum ada skill yang ditambahkan.</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}

@@ -1,0 +1,90 @@
+{% extends 'admin/base.html' %}
+
+{% block content %}
+<div class="header-section">
+    <h1>Kelola Pengalaman</h1>
+    <p>Tambahkan riwayat pendidikan, organisasi, atau pekerjaanmu di sini.</p>
+</div>
+
+<!-- FORM TAMBAH / EDIT PENGALAMAN -->
+<div class="card">
+    <!-- Judul akan otomatis berubah sesuai mode -->
+    <h3>{% if edit_exp %}✏️ Edit Pengalaman{% else %}➕ Tambah Pengalaman Baru{% endif %}</h3>
+    
+    <!-- Action link otomatis mengarah ke rute Edit jika sedang mode edit -->
+    <form method="POST" action="{% if edit_exp %}/admin/experiences/edit/{{ edit_exp[0] }}{% else %}/admin/experiences{% endif %}">
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 15px;">
+            <div class="input-group" style="margin-bottom: 0;">
+                <label>Posisi / Jabatan</label>
+                <input type="text" name="posisi" placeholder="Contoh: Web Developer" value="{{ edit_exp[2] if edit_exp else '' }}" required>
+            </div>
+            <div class="input-group" style="margin-bottom: 0;">
+                <label>Perusahaan / Institusi</label>
+                <input type="text" name="perusahaan" placeholder="Contoh: PT Teknologi Terdepan" value="{{ edit_exp[3] if edit_exp else '' }}" required>
+            </div>
+        </div>
+
+        <div class="input-group">
+            <label>Durasi / Waktu</label>
+            <input type="text" name="durasi" placeholder="Contoh: Jan 2021 - Des 2023" value="{{ edit_exp[4] if edit_exp else '' }}" required>
+        </div>
+
+        <div class="input-group">
+            <label>Deskripsi Pekerjaan</label>
+            <textarea name="deskripsi" rows="4" placeholder="Jelaskan apa saja yang kamu kerjakan..." required>{{ edit_exp[5] if edit_exp else '' }}</textarea>
+        </div>
+        
+        <div style="display: flex; gap: 10px; margin-top: 15px;">
+            <button type="submit" class="btn-action">
+                {% if edit_exp %}Simpan Perubahan{% else %}Tambah Pengalaman{% endif %}
+            </button>
+            
+            <!-- Munculkan tombol Batal HANYA saat sedang mode edit -->
+            {% if edit_exp %}
+                <a href="/admin/experiences" class="btn-action" style="background: #e0e0e0; color: #333; text-decoration: none; text-align: center;">Batal</a>
+            {% endif %}
+        </div>
+    </form>
+</div>
+
+<!-- TABEL DAFTAR PENGALAMAN -->
+<div class="card" style="margin-top: 30px;">
+    <h3>Daftar Pengalaman Saya</h3>
+    <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse; margin-top: 15px; text-align: left;">
+            <thead>
+                <tr style="background: #f8f9fa; border-bottom: 2px solid #eee;">
+                    <th style="padding: 12px; font-weight: 600;">Posisi & Perusahaan</th>
+                    <th style="padding: 12px; font-weight: 600;">Durasi</th>
+                    <th style="padding: 12px; font-weight: 600; width: 150px;">Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for exp in experiences %}
+                <tr style="border-bottom: 1px solid #eee;">
+                    <td style="padding: 12px;">
+                        <strong>{{ exp[2] }}</strong><br>
+                        <span style="color: #666; font-size: 0.9rem;">{{ exp[3] }}</span>
+                    </td>
+                    <td style="padding: 12px; color: #555;">{{ exp[4] }}</td>
+                    <td style="padding: 12px; display: flex; gap: 8px;">
+                        <!-- Tombol Edit -->
+                        <a href="/admin/experiences/edit/{{ exp[0] }}" class="btn-action" style="background: #ffb703; color: #000; padding: 6px 12px; font-size: 0.85rem; text-decoration: none; border-radius: 6px;">Edit</a>
+                        
+                        <!-- Tombol Hapus -->
+                        <form action="/admin/experiences/delete/{{ exp[0] }}" method="POST" style="display:inline;">
+                            <button type="submit" class="btn-action" style="background: #ff4c4c; padding: 6px 12px; font-size: 0.85rem; border-radius: 6px;" onclick="return confirm('Yakin ingin menghapus pengalaman ini?');">Hapus</button>
+                        </form>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="3" style="padding: 20px; text-align: center; color: #666;">Belum ada pengalaman.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,119 @@
+{% extends 'admin/base.html' %}
+
+{% block content %}
+<div class="header-section">
+    <h1>Kelola Profil</h1>
+    <p>Perbarui identitas, kontak, dan foto profilmu di sini.</p>
+</div>
+
+<!-- Menampilkan pesan sukses jika ada -->
+{% if pesan %}
+    <div style="background: #d4edda; color: #155724; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
+        {{ pesan }}
+    </div>
+{% endif %}
+
+<div class="card" style="max-width: 800px;">
+    <form method="POST" action="/admin/profiles" enctype="multipart/form-data">
+        
+        <div style="display: flex; gap: 20px;">
+            <div class="input-group" style="flex: 1;">
+                <label>Nama Lengkap</label>
+                <input type="text" name="nama_lengkap" value="{{ profile[2] if profile else '' }}" required>
+            </div>
+            <div class="input-group" style="flex: 1;">
+                <label>Nama Panggilan</label>
+                <input type="text" name="nama_panggilan" value="{{ profile[3] if profile else '' }}" required>
+            </div>
+        </div>
+
+        <div style="display: flex; gap: 20px;">
+            <div class="input-group" style="flex: 1;">
+                <label>Tempat Lahir</label>
+                <input type="text" name="tempat_lahir" value="{{ profile[4] if profile else '' }}">
+            </div>
+            <div class="input-group" style="flex: 1;">
+                <label>Tanggal Lahir</label>
+                <input type="date" name="tanggal_lahir" value="{{ profile[5] if profile else '' }}">
+            </div>
+        </div>
+
+        <div style="display: flex; gap: 20px;">
+            <div class="input-group" style="flex: 1;">
+                <label>Email Kontak</label>
+                <input type="email" name="email" value="{{ profile[6] if profile else '' }}">
+            </div>
+            <div class="input-group" style="flex: 1;">
+                <label>No. Telepon / WA</label>
+                <input type="text" name="telepon" value="{{ profile[7] if profile else '' }}">
+            </div>
+        </div>
+
+        <hr style="border: 0; border-top: 1px solid #ddd; margin: 20px 0;">
+        
+        <div style="display: flex; gap: 20px;">
+            <div class="input-group" style="flex: 1;">
+                <label>Universitas</label>
+                <input type="text" name="universitas" value="{{ profile[8] if profile else '' }}">
+            </div>
+            <div class="input-group" style="flex: 1;">
+                <label>Fakultas</label>
+                <input type="text" name="fakultas" value="{{ profile[9] if profile else '' }}">
+            </div>
+        </div>
+        
+        <div style="display: flex; gap: 20px;">
+            <div class="input-group" style="flex: 1;">
+                <label>Program Studi</label>
+                <input type="text" name="prodi" value="{{ profile[10] if profile else '' }}">
+            </div>
+            <div class="input-group" style="flex: 1;">
+                <label>Semester</label>
+                <input type="text" name="semester" value="{{ profile[11] if profile else '' }}">
+            </div>
+        </div>
+
+        <div class="input-group">
+            <label>Deskripsi / Biografi (Untuk halaman utama)</label>
+            <textarea name="alamat" rows="4" style="width: 100%; padding: 12px; border-radius: 5px; border: 1px solid #ddd;">{{ profile[12] if profile else '' }}</textarea>
+        </div>
+
+        <!-- FOTO 1: UNTUK HERO / BERANDA -->
+        <div class="input-group">
+            <label>Upload Foto Profil (Untuk Halaman Paling Atas / Hero)</label>
+            <input type="file" name="foto" accept="image/*">
+            <small style="color: #666;">*Biarkan kosong jika tidak ingin mengubah foto</small>
+            
+            {% if profile and profile[13] %}
+            <div style="margin-top: 10px;">
+                <p>Foto Hero saat ini:</p>
+                <img src="{{ profile[13] }}" alt="Foto Profil Hero" style="max-width: 150px; border-radius: 10px; border: 2px solid #1a1a1a;">
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- FOTO 2: UNTUK TENTANG / BIOGRAFI -->
+        <div class="input-group" style="margin-top: 20px;">
+            <label>Upload Foto Portrait (Untuk Bagian Biografi / Tentang)</label>
+            <input type="file" name="foto_2" accept="image/*">
+            <small style="color: #666;">*Biarkan kosong jika tidak ingin mengubah foto</small>
+            
+            {% if profile and profile|length > 14 and profile[14] %}
+            <div style="margin-top: 10px;">
+                <p>Foto Portrait saat ini:</p>
+                <img src="{{ profile[14] }}" alt="Foto Profil Portrait" style="max-width: 150px; border-radius: 10px; border: 2px solid #1a1a1a;">
+            </div>
+            {% endif %}
+        </div>
+
+       <!-- INPUT UNTUK TEKS HERO (BARU) -->
+        <div class="input-group" style="margin-top: 20px; margin-bottom: 20px;">
+            <label>Teks Slogan Utama (Untuk Halaman Paling Atas)</label>
+            <textarea name="judul_hero" rows="3" placeholder="Gunakan <br> untuk baris baru. Contoh: Mewujudkan Visi<br>Menjadi Nyata">{% if profile and profile|length > 15 and profile[15] %}{{ profile[15] }}{% endif %}</textarea>
+            <small style="color: #666;">*Tips: Gunakan tulisan <strong>&lt;br&gt;</strong> jika ingin teksnya turun ke baris bawah.</small>
+        </div> 
+
+        <button type="submit" class="btn-action" style="width: 100%; font-size: 1.1rem; margin-top: 20px;">Simpan Profil</button>
+    </form>
+</div>
+{% endblock %}

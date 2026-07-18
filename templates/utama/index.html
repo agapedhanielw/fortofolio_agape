@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portofolio | {% if profil %}{{ profil[2] }}{% else %}Agape{% endif %}</title>
+    
+    <!-- Google Fonts & FontAwesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- CSS Utama -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <ul class="nav-links left-links" id="nav-menu">
+                <li><a href="#hero">Beranda</a></li>
+                <li><a href="#about">Tentang</a></li>
+                <li><a href="#skills">Keahlian</a></li>
+                <li><a href="#projects">Proyek</a></li>
+            </ul>
+            
+            <!-- Logo - Klik untuk kembali ke atas -->
+            <a href="#" class="logo-circle">
+                <!-- Mengambil 2 huruf pertama dari nama panggilan -->
+                {{ profil[3][:2]|upper if profil else 'AG' }}
+            </a>
+            
+            <div class="nav-links right-links">
+                <!-- Link Instagram -->
+                <a href="https://www.instagram.com/why_agape?igsh=NmcwYWlkMDFzNXF5" target="_blank" rel="noopener noreferrer"><i class="fab fa-instagram"></i></a>
+                
+                <!-- Link GitHub -->
+                <a href="https://github.com/agapedhanielw" target="_blank" rel="noopener noreferrer"><i class="fab fa-github"></i></a>
+                
+                <!-- Link LinkedIn -->
+                <a href="https://www.linkedin.com/in/" target="_blank" rel="noopener noreferrer"><i class="fab fa-linkedin"></i></a>
+                
+                <!-- Tombol Email (Scroll ke bawah) -->
+                <a href="#contact" class="btn-nav-contact"><i class="fas fa-envelope"></i></a>
+            </div>
+
+            <!-- Tombol Hamburger untuk Mobile -->
+            <button class="mobile-toggle" id="mobile-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+<!-- ========================================= -->
+    <!-- 1. TIRAI LOADING (PREMIUM GRID & 3D TILT) -->
+    <!-- ========================================= -->
+    <div id="bento-preloader">
+        <div class="bento-scroll-container">
+            <div class="bento-track" id="bento-track">
+                
+                <!-- TRIK PINTAR: Jika proyek kurang, gunakan proyek yang ada untuk menutupi ruang kosong agar selalu RAMAI -->
+                {% set p1 = projects[0] if projects|length > 0 else None %}
+                {% set p2 = projects[1] if projects|length > 1 else p1 %}
+                {% set p3 = projects[2] if projects|length > 2 else p1 %}
+
+                <div class="bento-group">
+                    
+                    <!-- 1. Teks Utama (LURUS) -->
+                    <div class="b-card card-title">
+                        <h1 style="font-size: 3.5rem; color: #111; line-height: 1.1; margin-bottom: 15px; font-weight: 800;">
+                            {{ profil[2] if profil else 'Agape' }}.
+                        </h1>
+                        <p style="color: #666; font-size: 1.1rem;">Mempersiapkan portofolio & pengalaman digital...</p>
+                        <div style="margin-top: 40px; display: flex; gap: 10px;">
+                            <span class="loading-dot"></span><span class="loading-dot"></span><span class="loading-dot"></span>
+                        </div>
+                    </div>
+
+                    <!-- 2. Kartu Stat (LURUS) -->
+                    <div class="b-card card-stat dark-card">
+                        <h2 style="font-size: 2.8rem; margin-bottom: 5px;">{{ projects|length }}+</h2>
+                        <p style="color: #aaa; font-size: 0.95rem;">Proyek Selesai</p>
+                    </div>
+
+                    <!-- 3. Proyek 1 (MIRING KANAN) -->
+                    <div class="b-card card-proj-1 tilt-container">
+                        {% if p1 %}
+                            <img src="{{ p1[4] }}" alt="Proyek" class="tilt-right">
+                        {% endif %}
+                    </div>
+
+                    <!-- 4. Teks Slogan (LURUS) -->
+                    <div class="b-card card-text-1">
+                        <h3 style="font-size: 1.4rem; color: #333; line-height: 1.4;">Amati.<br>Tiru.<br>Modifikasi.</h3>
+                    </div>
+
+                    <!-- 5. Proyek 2 (MIRING KIRI) -->
+                    <div class="b-card card-proj-2 tilt-container">
+                        {% if p2 %}
+                            <img src="{{ p2[4] }}" alt="Proyek" class="tilt-left">
+                        {% endif %}
+                    </div>
+
+                    <!-- 6. Foto Profil (LURUS) -->
+                    <div class="b-card card-photo">
+                        {% if profil and profil[13] %}
+                            <img src="{{ profil[13] }}" alt="Foto">
+                        {% else %}
+                            <div style="background: #ccc; height: 100%;"></div>
+                        {% endif %}
+                    </div>
+
+                    <!-- 7. Proyek 3 (MIRING KANAN - RAKSASA) -->
+                    <div class="b-card card-proj-3 tilt-container">
+                        {% if p3 %}
+                            <img src="{{ p3[4] }}" alt="Proyek" class="tilt-right">
+                        {% endif %}
+                    </div>
+
+                    <!-- 8. Kutipan (LURUS) -->
+                    <div class="b-card card-misc-1 dark-card">
+                        <i class="fas fa-quote-left" style="font-size: 2rem; margin-bottom: 20px; color: #ffb703;"></i>
+                        <p style="font-size: 1.1rem; line-height: 1.6; color: #eee;">
+                            " "Sebab Aku ini mengetahui rancangan-rancangan apa yang ada pada-Ku mengenai kamu, demikianlah firman TUHAN, yaitu rancangan damai sejahtera dan bukan rancangan kecelakaan, untuk memberikan kepadamu hari depan yang penuh harapan." (Yeremia 29:11)."
+                        </p>
+                    </div>
+
+                    <!-- 9. Proyek Tambahan (MIRING KIRI) -->
+                    <div class="b-card card-misc-2 tilt-container">
+                        {% if p1 %}
+                            <img src="{{ p1[4] }}" alt="Proyek" class="tilt-left">
+                        {% endif %}
+                    </div>
+
+                    <!-- 10. Ikon (LURUS) -->
+                    <div class="b-card card-misc-3">
+                        <i class="fas fa-layer-group" style="font-size: 2.5rem; color: #111;"></i>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================= -->
+    <!-- 2. HERO SECTION ASLI (KEMBALI KE DESAIN AWAL) -->
+    <!-- ========================================= -->
+    <section id="hero" class="hero-section section-padding">
+        <div class="hero-content">
+            <div class="hero-image-wrapper">
+                {% if profil and profil[13] %}
+                    <img src="{{ profil[13] }}" alt="Foto {{ profil[2] }}" class="hero-img">
+                {% else %}
+                    <div class="hero-img placeholder-box">Tambahkan Foto di Admin</div>
+                {% endif %}
+            </div>
+            <div class="hero-text-wrapper">
+                <h1 class="hero-title">
+                    {% if profil and profil|length > 15 and profil[15] %}
+                        {{ profil[15]|safe }}
+                    {% else %}
+                        Ex Data, Veritas<br>Inspired by<br>Λόγος
+                    {% endif %}
+                </h1>
+                <p class="hero-subtitle">
+                    Sebagai Mahasiswa {{ profil[10] if profil else '' }} di {{ profil[8] if profil else '' }}, saya berdedikasi untuk mengubah ide menjadi solusi digital yang inovatif. Jelajahi proyek dan karya terbaru saya.
+                </p>
+                <div class="hero-buttons">
+                    <a href="#projects" class="btn-solid">Lihat Karya <i class="fas fa-external-link-square-alt"></i></a>
+                    <a href="#contact" class="btn-text">Hubungi Saya</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ABOUT / BIOGRAPHY SECTION -->
+    <section id="about" class="about-section section-padding">
+        <h1 class="huge-title text-center">Semangat Menjadi Penimpa!</h1>
+        
+        <div class="about-grid">
+            <!-- Kolom Kiri: Biografi -->
+            <div class="about-bio">
+                <h3 class="sub-heading">BIOGRAFI</h3>
+                <p>{{ profil[12] if profil else 'Belum ada biografi yang ditambahkan. Silakan perbarui melalui panel admin.' }}</p>
+            </div>
+            
+            <!-- Kolom Tengah: Frame Foto -->
+            <div class="about-frame-container">
+                <div class="about-frame">
+                    {% if profil and profil|length > 14 and profil[14] %}
+                        <img src="{{ profil[14] }}" alt="Portrait">
+                    {% elif profil and profil[13] %}
+                        <img src="{{ profil[13] }}" alt="Portrait">
+                    {% else %}
+                        <div class="placeholder-portrait">Foto Portrait</div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Kolom Kanan: Statistik (Otomatis Dihitung) -->
+            <div class="about-stats">
+                <div class="stat-box">
+                    <h2>{{ profil[11] if profil else '1' }}</h2>
+                    <p>Semester Saat Ini</p>
+                </div>
+                <div class="stat-box">
+                    <h2>{{ projects|length }}+</h2>
+                    <p>Proyek Diselesaikan</p>
+                </div>
+                <div class="stat-box">
+                    <h2>{{ skills|length }}+</h2>
+                    <p>Keahlian Dikuasai</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SKILLS & EXPERIENCE SECTION -->
+    <section id="skills" class="skills-section section-padding">
+        <h2 class="huge-title text-center" style="font-size: 3rem;">Pengalaman & Keahlian</h2>
+        <div class="exp-skill-container">
+            <div class="exp-list">
+                <h3 class="sub-heading">RIWAYAT PENGALAMAN</h3>
+                {% for exp in experiences %}
+                    <div class="exp-item">
+                        <h4>{{ exp[2] }} <span class="exp-company">@ {{ exp[3] }}</span></h4>
+                        <p class="exp-date">{{ exp[4] }}</p>
+                        <p class="exp-desc">{{ exp[5]|safe }}</p>
+                    </div>
+                {% else %}
+                    <p>Belum ada pengalaman.</p>
+                {% endfor %}
+            </div>
+            
+            <div class="skill-list">
+                <h3 class="sub-heading">KEAHLIAN TEKNIS</h3>
+                <div class="skill-tags">
+                    {% for s in skills %}
+                        <span class="skill-badge"><i class="{{ s[3] }}"></i> {{ s[2] }}</span>
+                    {% else %}
+                        <p>Belum ada keahlian.</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PROJECTS SECTION (DARK MODE) -->
+    <section id="projects" class="projects-section section-padding dark-mode">
+        <h1 class="huge-title text-center text-light">Imajinasi Melampaui<br>Pengetahuan!</h1>
+        
+        <div class="projects-container">
+            {% for p in projects %}
+                <div class="project-card-horizontal">
+                    <div class="project-img-box">
+                        <img src="{{ p[4] }}" alt="{{ p[2] }}">
+                    </div>
+                    <div class="project-info-box">
+                        <span class="featured-tag">Proyek Pilihan</span>
+                        <h2 class="project-title">{{ p[2] }}</h2>
+                        <p class="project-desc">{{ p[3]|safe }}</p>
+                        <div class="project-links">
+                            {% if p[5] %}
+                                <a href="{{ p[5] }}" target="_blank" class="btn-outline-light"><i class="fab fa-github"></i> Lihat Website</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <p class="text-light text-center">Belum ada proyek yang ditambahkan.</p>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- CONTACT SECTION -->
+    <section id="contact" class="contact-section section-padding">
+        <h2 class="huge-title text-center" style="font-size: 3rem;">Mari Bekerja Sama</h2>
+        <div class="contact-wrapper">
+            {% if pesan_kontak %}
+                <div class="alert-success"><i class="fas fa-check-circle"></i> {{ pesan_kontak }}</div>
+            {% endif %}
+            <form method="POST" action="/" class="modern-form">
+                <div class="form-group-row">
+                    <input type="text" name="nama" placeholder="Nama Lengkap Anda" required>
+                    <input type="email" name="email" placeholder="Alamat Email Anda" required>
+                </div>
+                <textarea name="pesan" rows="6" placeholder="Ceritakan ide atau proyek Anda..." required></textarea>
+                <button type="submit" class="btn-solid" style="width: 100%;">Kirim Pesan Sekarang</button>
+            </form>
+        </div>
+    </section>
+
+    <footer class="footer-dark">
+        <!-- Pintu rahasia ke panel admin ada di tahun "2026" -->
+        <p>&copy; <a href="/admin" style="color: inherit; text-decoration: none;">2026</a> {{ profil[2] if profil else 'Agape' }}.Portofolio 2026.</p>
+    </footer>
+
+    <!-- Memanggil File JavaScript Eksternal (Pengganti Script Lama) -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+</body>
+</html>

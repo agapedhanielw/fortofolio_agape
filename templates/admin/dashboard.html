@@ -1,0 +1,88 @@
+{% extends 'admin/base.html' %}
+
+{% block content %}
+<!-- CSS Khusus Dashboard (Ditulis di sini agar kebal dari cache browser) -->
+<style>
+    .dashboard-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr); /* Paksa dibagi jadi 2 kolom sama besar */
+        gap: 30px;
+        margin-top: 30px;
+        width: 100%;
+    }
+    .dash-card {
+        background: white;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        min-height: 220px;
+    }
+    .dash-title {
+        margin-bottom: 15px; 
+        border-bottom: 2px solid #eee; 
+        padding-bottom: 10px;
+        font-size: 1.3rem;
+        color: #1a1a1a;
+    }
+    .dash-desc {
+        color: #666; 
+        margin-bottom: 25px; 
+        line-height: 1.6;
+    }
+    
+    /* Jika dibuka di HP, otomatis jadi 1 kolom menyusun ke bawah */
+    @media (max-width: 800px) {
+        .dashboard-grid {
+            grid-template-columns: 1fr; 
+        }
+    }
+</style>
+
+<div class="header-section">
+    <h1>Dashboard Utama</h1>
+    <p>Selamat datang kembali, Bos! Mau update portofolio apa hari ini?</p>
+</div>
+
+<div class="dashboard-grid">
+    
+    <!-- Kartu Profil -->
+    <div class="dash-card">
+        <div>
+            <h3 class="dash-title">Kelola Profil</h3>
+            <p class="dash-desc">Ubah foto profil, nama, teks slogan depan, atau biografi singkatmu di sini.</p>
+        </div>
+        <a href="/admin/profiles" class="btn-action" style="text-align: center; text-decoration: none; display: block;">Edit Profil</a>
+    </div>
+
+    <!-- Kartu Proyek -->
+    <div class="dash-card">
+        <div>
+            <h3 class="dash-title">Kelola Proyek</h3>
+            <p class="dash-desc">Tambahkan hasil karya atau portofolio terbarumu agar dilihat dunia.</p>
+        </div>
+        <a href="/admin/projects" class="btn-action" style="text-align: center; text-decoration: none; display: block;">Lihat Proyek</a>
+    </div>
+    
+    <!-- Kartu Skill -->
+    <div class="dash-card">
+        <div>
+            <h3 class="dash-title">Kelola Skill</h3>
+            <p class="dash-desc">Update keahlian teknis, bahasa pemrograman, tools, dan ikon aplikasinya.</p>
+        </div>
+        <a href="/admin/skills" class="btn-action" style="text-align: center; text-decoration: none; display: block;">Lihat Skill</a>
+    </div>
+
+    <!-- Kartu Pengalaman -->
+    <div class="dash-card">
+        <div>
+            <h3 class="dash-title">Kelola Pengalaman</h3>
+            <p class="dash-desc">Tambahkan riwayat pendidikan, organisasi, atau pengalaman pekerjaanmu.</p>
+        </div>
+        <a href="/admin/experiences" class="btn-action" style="text-align: center; text-decoration: none; display: block;">Lihat Pengalaman</a>
+    </div>
+
+</div>
+{% endblock %}
