@@ -64,5 +64,5 @@ def kirim_email_kontak(nama_pengirim, email_pengirim, isi_pesan):
         email = resend.Emails.send(params)
         return True
     except Exception as e:
-        print(f"Error Kirim Email Resend: {e}")
+        print(f"🔥🔥🔥 ERROR KIRIM EMAIL RESEND: {str(e)} 🔥🔥🔥")
         return False
