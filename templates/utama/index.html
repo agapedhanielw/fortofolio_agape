@@ -229,38 +229,100 @@
         </div>
     </section>
 
-    <!-- SKILLS & EXPERIENCE SECTION -->
-    <section id="skills" class="skills-section section-padding">
-        <h2 class="huge-title text-center" style="font-size: 3rem;">Pengalaman & Keahlian</h2>
-        <div class="exp-skill-container">
-            <!-- Kolom Pengalaman dengan Garis Animasi -->
-            <div class="exp-list" style="position: relative;">
-                <h3 class="sub-heading">RIWAYAT PENGALAMAN</h3>
-                
-                <!-- Trek Garis Latar & Garis Biru Berjalan -->
-                <div class="timeline-track" id="timeline-track"></div>
-                <div class="timeline-fill" id="timeline-fill"></div>
-
-                {% for exp in experiences %}
-                    <div class="exp-item timeline-item">
-                        <h4>{{ exp[2] }} <span class="exp-company">@ {{ exp[3] }}</span></h4>
-                        <p class="exp-date">{{ exp[4] }}</p>
-                        <p class="exp-desc">{{ exp[5]|safe }}</p>
-                    </div>
-                {% else %}
-                    <p>Belum ada pengalaman.</p>
-                {% endfor %}
-            </div>
+ <!-- SKILLS & EXPERIENCE SECTION -->
+    <!-- Tambahan: position relative dan overflow hidden untuk menahan bintang agar tidak keluar batas -->
+    <section id="skills" class="skills-section section-padding" style="position: relative; overflow: hidden;">
+        
+        <!-- ========================================== -->
+        <!-- 1. KANVAS BACKGROUND LUAR ANGKASA          -->
+        <!-- ========================================== -->
+        <div class="space-transition-bg"></div>
+        <div class="stars-container" id="stars-container"></div>
+        
+        <!-- ========================================== -->
+        <!-- 2. BUNGKUS KONTEN ASLI (Z-INDEX NAIK)      -->
+        <!-- ========================================== -->
+        <div class="relative-z">
             
-            <div class="skill-list">
-                <h3 class="sub-heading">KEAHLIAN TEKNIS</h3>
-                <div class="skill-tags">
-                    {% for s in skills %}
-                        <span class="skill-badge"><i class="{{ s[3] }}"></i> {{ s[2] }}</span>
+            <!-- Tambahan class 'experience-title' agar warnanya otomatis jadi putih saat background gelap -->
+            <h2 class="huge-title text-center experience-title" style="font-size: 3rem;">Pengalaman & Keahlian</h2>
+            
+            <div class="exp-skill-container">
+                
+                <!-- KOLOM KIRI: Pengalaman dengan Garis Animasi -->
+                <div class="exp-list" style="position: relative;">
+                    <!-- Tambahan class 'experience-title' di sini juga opsional agar ikut putih -->
+                    <h3 class="sub-heading experience-title">RIWAYAT PENGALAMAN</h3>
+                    
+                    <!-- Trek Garis Latar & Garis Biru Berjalan -->
+                    <div class="timeline-track" id="timeline-track"></div>
+                    <div class="timeline-fill" id="timeline-fill"></div>
+
+                    {% for exp in experiences %}
+                        <div class="exp-item timeline-item">
+                            <h4>{{ exp[2] }} <span class="exp-company">@ {{ exp[3] }}</span></h4>
+                            <p class="exp-date">{{ exp[4] }}</p>
+                            <p class="exp-desc">{{ exp[5]|safe }}</p>
+                        </div>
                     {% else %}
-                        <p>Belum ada keahlian.</p>
+                        <p>Belum ada pengalaman.</p>
                     {% endfor %}
                 </div>
+                
+                <!-- KOLOM KANAN: KEAHLIAN TEKNIS (SKILL ORBIT) -->
+                <div class="col-lg-6">
+                    <div class="skills-card">
+                        <div class="skills-orbit-wrapper block-reveal-target">
+                            
+                            <!-- Lingkaran Garis Bantu -->
+                            <div class="orbit-ring-1"></div>
+                            <div class="orbit-ring-2"></div>
+
+                            <!-- PUSAT GRAVITASI: PIRINGAN HITAM (VINYL RECORD) -->
+                            <div class="orbit-center vinyl-record">
+                                {% if profil and profil[13] %}
+                                    <img src="{{ profil[13] }}" alt="Center Profile">
+                                {% else %}
+                                    <div class="vinyl-fallback">AG</div>
+                                {% endif %}
+                            </div>
+
+                            <!-- Kontainer Utama yang Berputar -->
+                            <div class="orbit-container">
+                                {% set total_skills = skills|length %}
+                                {% if total_skills > 0 %}
+                                    {% for s in skills %}
+                                        <!-- Rumus Matematika Pembagian Sudut Otomatis -->
+                                        {% set angle = (360 / total_skills) * loop.index0 %}
+                                        {% set delay = loop.index0 * 0.15 %}
+                                        
+                                        <div class="orbit-item" style="--angle: {{ angle }}deg; --delay: {{ delay }}s;">
+                                            <!-- Garis tipis menuju tengah (Efek Hover) -->
+                                            <div class="orbit-line"></div>
+                                            
+                                            <!-- Animasi Pop-in saat pertama kali muncul -->
+                                            <div class="orbit-item-entrance">
+                                                <!-- Animasi Counter-Spin agar teks tidak terbalik -->
+                                                <div class="orbit-item-content">
+                                                    
+                                                    <!-- BADGE ICON (Bisa memanjang saat diklik/hover) -->
+                                                    <div class="orbit-badge-compact" tabindex="0">
+                                                        <i class="{{ s[3] if s[3] else 'fas fa-star' }}"></i>
+                                                        <span class="skill-name">{{ s[2] }}</span>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                {% else %}
+                                    <p class="text-muted">Belum ada keahlian ditambahkan.</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </section>

@@ -822,3 +822,255 @@ body.cinematic-mode .modern-form textarea::placeholder {
 .custom-cursor.view-mode .cursor-text {
     opacity: 1;
 }
+
+/* =========================================
+   SKILL ORBIT ANIMATION (PURE CSS)
+========================================= */
+
+/* =========================================
+   SKILL ORBIT ANIMATION (FULL & COMPLETE)
+========================================= */
+
+/* --- 1. WRAPPER UTAMA --- */
+.skills-orbit-wrapper {
+    position: relative;
+    width: 100%;
+    height: 450px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: visible;
+}
+
+/* --- 2. CINCIN GARIS BANTU --- */
+.orbit-ring-1, .orbit-ring-2 {
+    position: absolute;
+    border-radius: 50%;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+}
+.orbit-ring-1 {
+    width: 300px; height: 300px; /* Radius 150px */
+    border: 1px dashed rgba(0, 0, 0, 0.15);
+}
+.orbit-ring-2 {
+    width: 180px; height: 180px;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+/* --- 3. PUSAT GRAVITASI (PIRINGAN HITAM VINYL) --- */
+.orbit-center.vinyl-record {
+    position: absolute;
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    background-color: #111;
+    background-image: repeating-radial-gradient(#111, #111 4px, #222 5px, #111 6px);
+    border: 3px solid #333;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.4), inset 0 0 10px #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+    animation: spinVinyl 4s linear infinite;
+}
+@keyframes spinVinyl {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+.orbit-center.vinyl-record img {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--action-blue, #0066cc);
+}
+.vinyl-fallback {
+    color: #fff; font-size: 14px; font-weight: 800;
+}
+
+/* --- 4. KONTAINER BERPUTAR LAMBAT (30 Detik) --- */
+.orbit-container {
+    position: absolute;
+    width: 2px; height: 2px;
+    animation: spinOrbit 30s linear infinite;
+    z-index: 5;
+}
+@keyframes spinOrbit {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* HENTIKAN WAKTU SAAT MOUSE MENDEKAT */
+.skills-orbit-wrapper:hover .orbit-container,
+.skills-orbit-wrapper:hover .orbit-item-content {
+    animation-play-state: paused;
+}
+
+/* --- 5. RUMUS TITIK LINGKARAN & GARIS LASER --- */
+.orbit-item {
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 0; height: 0;
+    /* INI YANG BIKIN MEREKA JADI LINGKARAN (Jarak 150px) */
+    transform: rotate(var(--angle)) translateX(150px);
+}
+
+.orbit-line {
+    position: absolute;
+    top: 50%; left: 0;
+    width: 110px;
+    height: 2px;
+    background: linear-gradient(to right, var(--action-blue, #0066cc), transparent);
+    transform-origin: 0 50%;
+    transform: translateY(-50%) rotate(180deg);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    z-index: -1;
+}
+.orbit-item:hover .orbit-line,
+.orbit-item:focus-within .orbit-line {
+    opacity: 1; /* Garis laser muncul saat icon disentuh */
+}
+
+/* --- 6. ANIMASI ANTI-TERBALIK (COUNTER-SPIN) --- */
+.orbit-item-entrance {
+    animation: orbitPopIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) backwards;
+    animation-delay: var(--delay);
+}
+@keyframes orbitPopIn {
+    0% { transform: scale(0); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.orbit-item-content {
+    position: absolute;
+    /* Menengahkan icon persis di garis cincin */
+    top: -21px; left: -21px; 
+    width: max-content;
+    transform-origin: center center;
+    animation: counterSpin 30s linear infinite;
+    transform: rotate(calc(-1 * var(--angle))); 
+}
+@keyframes counterSpin {
+    from { transform: rotate(calc(-1 * var(--angle) - 0deg)); }
+    to { transform: rotate(calc(-1 * var(--angle) - 360deg)); }
+}
+
+/* --- 7. WUJUD ICON YANG BISA MELAR --- */
+.orbit-badge-compact {
+    display: flex;
+    align-items: center;
+    background: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 50px;
+    padding: 10px;
+    max-width: 42px; 
+    height: 42px;
+    overflow: hidden;
+    cursor: pointer;
+    box-sizing: border-box;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    transition: max-width 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
+                padding 0.5s, box-shadow 0.3s, border-color 0.3s;
+}
+
+.orbit-badge-compact i {
+    flex-shrink: 0;
+    width: 22px;
+    text-align: center;
+    font-size: 1.2rem;
+    color: var(--action-blue, #0066cc);
+    transition: transform 0.3s;
+}
+
+.orbit-badge-compact .skill-name {
+    opacity: 0;
+    white-space: nowrap;
+    padding-left: 12px;
+    font-weight: 700;
+    font-size: 13px;
+    color: #333;
+    transition: opacity 0.3s ease;
+}
+
+/* Saat disentuh/diklik memanjang */
+.orbit-badge-compact:hover, 
+.orbit-badge-compact:focus {
+    max-width: 200px; 
+    padding-right: 20px;
+    box-shadow: 0 10px 25px rgba(0, 102, 204, 0.3);
+    border-color: var(--action-blue, #0066cc);
+    outline: none;
+}
+.orbit-badge-compact:hover .skill-name,
+.orbit-badge-compact:focus .skill-name {
+    opacity: 1;
+}
+.orbit-badge-compact:hover i,
+.orbit-badge-compact:focus i {
+    transform: scale(1.1) rotate(5deg);
+}
+
+/* =========================================
+   SPACE TRANSITION BACKGROUND (PENGALAMAN)
+========================================= */
+
+/* Lapisan 1: Gradien atmosfer Bumi ke Luar Angkasa */
+.space-transition-bg {
+    position: absolute;
+    top: 0; left: 0; 
+    width: 100%; height: 100%;
+    /* Putih (atas) -> Abu -> Biru Gelap -> Hitam Pekat (bawah) */
+    background: linear-gradient(to bottom, 
+        transparent 0%,       /* Menyatu dengan section atasnya */
+        #8e9eab 15%,          /* Mulai meredup abu-abu */
+        #1e293b 40%,          /* Biru gelap malam */
+        #020617 70%,          /* Hitam luar angkasa */
+        #000000 100%
+    );
+    z-index: 0;
+}
+
+/* Lapisan 2: Wadah Bintang (Hanya di area gelap) */
+.stars-container {
+    position: absolute;
+    top: 25%; /* Bintang baru mulai muncul di area biru gelap */
+    left: 0; width: 100%; height: 75%;
+    z-index: 1;
+    opacity: 0; /* Sembunyi secara default */
+    transition: opacity 2s ease-in-out; /* Fade in sangat halus (2 detik) */
+}
+
+/* Kelas saat sensor menangkap layar */
+.stars-container.stars-active {
+    opacity: 1;
+}
+
+/* Wujud Partikel Bintang */
+.star-particle {
+    position: absolute;
+    background-color: #ffffff;
+    border-radius: 50%;
+    animation: twinkleStar infinite alternate;
+}
+
+@keyframes twinkleStar {
+    0% { opacity: 0.1; transform: scale(0.5); }
+    100% { opacity: 1; transform: scale(1.2); box-shadow: 0 0 10px rgba(255,255,255,0.8); }
+}
+
+/* Mengangkat konten agar tidak tenggelam di bawah background */
+.relative-z {
+    position: relative;
+    z-index: 10; 
+}
+
+/* Transisi warna judul dari hitam ke putih saat di-scroll */
+.experience-title {
+    transition: color 1s ease;
+}
+.experience-title.text-light-mode {
+    color: #ffffff !important;
+    text-shadow: 0 0 20px rgba(255,255,255,0.3);
+}

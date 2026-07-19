@@ -538,3 +538,53 @@ if (customCursor && cursorTextSpan) {
         });
     });
 }
+
+// ==========================================
+// SPACE TRANSITION & STAR GENERATOR
+// ==========================================
+const starsContainer = document.getElementById('stars-container');
+const experienceSection = document.getElementById('skills');
+
+if (starsContainer && experienceSection) {
+    // 1. Taburkan 100 bintang dengan ukuran & posisi acak
+    const numStars = 100;
+    for (let i = 0; i < numStars; i++) {
+        const star = document.createElement('div');
+        star.classList.add('star-particle');
+        
+        // Ukuran random (1px sampai 3px)
+        const size = Math.random() * 2 + 1;
+        star.style.width = `${size}px`;
+        star.style.height = `${size}px`;
+        
+        // Posisi random menyebar di seluruh kontainer
+        star.style.left = `${Math.random() * 100}%`;
+        star.style.top = `${Math.random() * 100}%`;
+        
+        // Kecepatan kelap-kelip random (1 detik - 4 detik)
+        star.style.animationDuration = `${Math.random() * 3 + 1}s`;
+        
+        starsContainer.appendChild(star);
+    }
+
+    // 2. Sensor pergerakan Scroll
+    const spaceObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            const title = experienceSection.querySelector('.experience-title');
+            
+            if (entry.isIntersecting) {
+                // Saat masuk area pengalaman: Munculkan bintang perlahan & Ubah judul jadi putih
+                starsContainer.classList.add('stars-active');
+                if(title) title.classList.add('text-light-mode');
+            } else {
+                // Saat kembali naik ke atas: Matikan bintang & kembalikan judul ke hitam
+                starsContainer.classList.remove('stars-active');
+                if(title) title.classList.remove('text-light-mode');
+            }
+        });
+    }, { 
+        threshold: 0.25 // Efek menyala saat 25% area ini masuk ke layar 
+    });
+
+    spaceObserver.observe(experienceSection);
+}
