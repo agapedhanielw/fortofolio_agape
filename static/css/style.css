@@ -1,238 +1,824 @@
-/* --- RESET & VARIABLES --- */
-:root {
-    --dark-bg: #121212;
-    --light-bg: #fafafa;
-    --text-dark: #1e1e1e;
-    --text-light: #f5f5f5;
-    --accent: #000000;
+/* --- ATMOSFER GLOBAL --- */
+.noise-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: url('https://grainy-gradients.vercel.app/noise.svg');
+    opacity: 0.05; pointer-events: none; z-index: -1;
 }
 
+.aurora-gradient {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: radial-gradient(circle at 50% 50%, rgba(0, 102, 204, 0.08) 0%, transparent 70%);
+    pointer-events: none; z-index: -2;
+}
+
+.grid-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background-image: linear-gradient(rgba(0,0,0,0.05) 1px, transparent 1px), 
+                      linear-gradient(90deg, rgba(0,0,0,0.05) 1px, transparent 1px);
+    background-size: 50px 50px; pointer-events: none; z-index: -3;
+}
+
+.mouse-light {
+    position: fixed; width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(0, 102, 204, 0.05) 0%, transparent 70%);
+    border-radius: 50%; pointer-events: none; z-index: -1;
+    transform: translate(-50%, -50%); opacity: 0; transition: opacity 0.3s;
+}
+
+/* =========================================
+   1. APPLE DESIGN SYSTEM VARIABLES
+========================================= */
+:root {
+    /* Brand & Accent */
+    --action-blue: #0066cc;
+    --sky-blue: #2997ff;
+    
+    /* Surface Colors */
+    --canvas-white: #ffffff;
+    --canvas-parchment: #f5f5f7;
+    --surface-tile-1: #272729;
+    --surface-black: #000000;
+    
+    /* Text Colors */
+    --ink: #1d1d1f;
+    --body-muted: #cccccc;
+    --ink-muted: #7a7a7a;
+    
+    /* Borders & Depth */
+    --hairline: #e0e0e0;
+    --product-shadow: rgba(0, 0, 0, 0.22) 3px 5px 30px 0px;
+    
+    /* Typography */
+    --font-apple: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* =========================================
+   2. RESET & BASE TYPOGRAPHY
+========================================= */
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: 'Montserrat', sans-serif; background-color: var(--light-bg); color: var(--text-dark); overflow-x: hidden; }
-a { text-decoration: none; color: inherit; }
+
+body { 
+    font-family: var(--font-apple); 
+    background-color: var(--canvas-parchment); 
+    color: var(--ink); 
+    overflow-x: hidden; 
+    /* Apple Body Text Specs: 17px, weight 400 */
+    font-size: 17px;
+    font-weight: 400;
+    line-height: 1.44; 
+    letter-spacing: -0.374px;
+}
+
+a { text-decoration: none; color: inherit; transition: 0.3s; }
 .section-padding { padding: 100px 5%; }
 .text-center { text-align: center; }
-.text-light { color: var(--text-light); }
-.dark-mode { background-color: var(--dark-bg); color: var(--text-light); }
 
-/* --- TYPOGRAPHY --- */
-.huge-title { font-size: 4.5rem; font-weight: 800; line-height: 1.1; margin-bottom: 50px; letter-spacing: -1.5px; }
-.sub-heading { font-size: 1rem; color: #666; font-weight: 600; letter-spacing: 2px; margin-bottom: 20px; text-transform: uppercase; }
-
-/* --- NAVBAR --- */
-.navbar { position: fixed; top: 0; width: 100%; padding: 20px 5%; background: var(--light-bg); z-index: 1000; }
-.nav-container { display: flex; justify-content: space-between; align-items: center; max-width: 1400px; margin: 0 auto; position: relative; }
-.nav-links { display: flex; gap: 30px; list-style: none; align-items: center; font-weight: 500; }
-.left-links a:hover { text-decoration: underline; text-underline-offset: 5px; }
-.logo-circle { width: 50px; height: 50px; background-color: var(--text-dark); color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-weight: 800; font-size: 1.2rem; position: absolute; left: 50%; transform: translateX(-50%); }
-.right-links i { font-size: 1.3rem; transition: 0.3s; }
-.right-links i:hover { transform: translateY(-3px); }
-.mobile-toggle { display: none; background: none; border: none; font-size: 1.5rem; cursor: pointer; }
-
-/* --- BUTTONS --- */
-.btn-solid { background: var(--accent); color: white; padding: 12px 28px; border-radius: 8px; font-weight: 600; display: inline-block; transition: 0.3s; border: 2px solid var(--accent); cursor: pointer; }
-.btn-solid:hover { background: transparent; color: var(--accent); }
-.btn-text { font-weight: 600; text-decoration: underline; text-underline-offset: 5px; margin-left: 20px; }
-.btn-outline-light { border: 2px solid white; color: white; padding: 10px 20px; border-radius: 8px; font-weight: 600; display: inline-block; transition: 0.3s; margin-top: 15px;}
-.btn-outline-light:hover { background: white; color: var(--dark-bg); }
-
-/* --- HERO SECTION --- */
-.hero-content { display: flex; align-items: center; gap: 50px; max-width: 1400px; margin: 0 auto; min-height: 85vh; padding-top: 50px; }
-.hero-image-wrapper { flex: 1; }
-.hero-img { width: 100%; max-width: 500px; border-radius: 20px; object-fit: cover; }
-.placeholder-box { height: 500px; background: #ddd; display: flex; align-items: center; justify-content: center; border-radius: 20px; }
-.hero-text-wrapper { flex: 1; }
-.hero-title { font-size: 4.5rem; font-weight: 800; line-height: 1.1; margin-bottom: 20px; }
-.hero-subtitle { font-size: 1.1rem; color: #555; margin-bottom: 30px; line-height: 1.6; max-width: 500px; }
-.hero-buttons { display: flex; align-items: center; }
-
-/* --- ABOUT SECTION --- */
-.about-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 40px; max-width: 1200px; margin: 0 auto; align-items: center; }
-.about-bio p { line-height: 1.8; color: #444; margin-bottom: 15px; font-size: 1.05rem;}
-.about-frame-container { text-align: center; }
-.about-frame img, .placeholder-portrait { width: 100%; max-width: 350px; border: 4px solid var(--text-dark); border-radius: 10px; box-shadow: 15px 15px 0px var(--text-dark); /* INI KUNCI EFEK BINGKAI BRUTALISM */ aspect-ratio: 3/4; object-fit: cover; }
-.placeholder-portrait { display: flex; align-items: center; justify-content: center; font-weight: bold; }
-.about-stats { display: flex; flex-direction: column; gap: 40px; text-align: right; }
-.stat-box h2 { font-size: 3.5rem; font-weight: 800; line-height: 1; }
-.stat-box p { color: #666; font-weight: 500; font-size: 1.1rem; }
-
-/* --- SKILLS & EXP SECTION --- */
-.exp-skill-container { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; max-width: 1200px; margin: 0 auto; }
-.exp-item { border-left: 3px solid var(--accent); padding-left: 20px; margin-bottom: 30px; position: relative; }
-.exp-item::before { content: ''; position: absolute; left: -9px; top: 5px; width: 15px; height: 15px; background: var(--accent); border-radius: 50%; }
-.exp-item h4 { font-size: 1.3rem; margin-bottom: 5px; }
-.exp-company { color: #666; font-weight: 400; }
-.exp-date { font-weight: 700; font-size: 0.9rem; margin-bottom: 10px; }
-.skill-tags { display: flex; flex-wrap: wrap; gap: 15px; }
-.skill-badge { background: #e5e5e5; padding: 10px 20px; border-radius: 30px; font-weight: 600; font-size: 1rem; }
-
-/* --- PROJECTS SECTION --- */
-.projects-container { max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 60px; }
-.project-card-horizontal { display: flex; background: #1e1e1e; border-radius: 20px; overflow: hidden; border: 1px solid #333; }
-.project-img-box { flex: 1.2; }
-.project-img-box img { width: 100%; height: 100%; object-fit: cover; min-height: 350px; }
-.project-info-box { flex: 1; padding: 50px; display: flex; flex-direction: column; justify-content: center; }
-.featured-tag { color: #2dd4bf; font-weight: 600; font-size: 1.1rem; margin-bottom: 15px; display: block; }
-.project-title { font-size: 2.5rem; margin-bottom: 20px; }
-.project-desc { color: #aaa; line-height: 1.6; margin-bottom: 30px; }
-
-/* --- CONTACT SECTION --- */
-.contact-wrapper { max-width: 800px; margin: 0 auto; }
-.modern-form { display: flex; flex-direction: column; gap: 20px; }
-.form-group-row { display: flex; gap: 20px; }
-.modern-form input, .modern-form textarea { width: 100%; padding: 18px; border: 2px solid #ddd; border-radius: 10px; font-family: inherit; font-size: 1rem; outline: none; transition: 0.3s; background: white; }
-.modern-form input:focus, .modern-form textarea:focus { border-color: var(--accent); }
-.alert-success { background: #d1fae5; color: #065f46; padding: 15px; border-radius: 10px; text-align: center; font-weight: 600; margin-bottom: 20px; }
-.footer-dark { background: var(--dark-bg); color: #888; text-align: center; padding: 30px; font-weight: 500; }
+/* HIERARKI TEKS APPLE */
+.hero-title { font-size: 56px; font-weight: 600; line-height: 1.07; letter-spacing: -0.28px; color: var(--ink); margin-bottom: 20px;}
+.huge-title { font-size: 40px; font-weight: 600; line-height: 1.1; letter-spacing: -0.01em; margin-bottom: 40px;}
+.sub-heading { font-size: 14px; font-weight: 600; color: var(--ink-muted); letter-spacing: -0.224px; margin-bottom: 16px; text-transform: uppercase;}
+.hero-subtitle { font-size: 24px; font-weight: 300; line-height: 1.5; letter-spacing: 0; margin-bottom: 32px; color: var(--ink-muted); max-width: 600px;}
 
 /* =========================================
-   RESPONSIVE DESIGN (TABLET & MOBILE) 
+   3. GLOBAL NAVIGATION (APPLE STYLE)
 ========================================= */
-@media (max-width: 1024px) {
-    .huge-title, .hero-title { font-size: 3.5rem; }
-    .about-grid { gap: 20px; }
-    .project-card-horizontal { flex-direction: column; }
-}
-
-@media (max-width: 768px) {
-    /* Navbar Mobile */
-    .mobile-toggle { display: block; }
-    .nav-links.left-links { display: none; position: absolute; top: 80px; left: 0; width: 100%; background: white; flex-direction: column; padding: 20px 0; box-shadow: 0 10px 10px rgba(0,0,0,0.1); }
-    .nav-links.left-links.active { display: flex; }
-    .logo-circle { left: 20px; transform: none; }
-    
-    /* Layout Changes */
-    .huge-title, .hero-title { font-size: 2.5rem; }
-    .hero-content { flex-direction: column; text-align: center; padding-top: 80px; }
-    .hero-buttons { justify-content: center; }
-    .btn-text { margin-top: 15px; display: block; }
-    
-    /* About Mobile */
-    .about-grid { grid-template-columns: 1fr; text-align: center; }
-    .about-frame-container { order: -1; margin-bottom: 30px; }
-    .about-stats { text-align: center; flex-direction: row; flex-wrap: wrap; justify-content: center; }
-    .about-frame img { box-shadow: 10px 10px 0px var(--text-dark); }
-    
-    /* Skills & Exp Mobile */
-    .exp-skill-container { grid-template-columns: 1fr; }
-    
-    /* Form Mobile */
-    .form-group-row { flex-direction: column; }
-    .project-info-box { padding: 30px; }
-}
-
-/* =========================================
-   ANIMASI & INTERAKTIF (JAVASCRIPT)
-========================================= */
-/* 1. Efek Navbar saat di-scroll ke bawah */
-.navbar {
-    transition: all 0.4s ease-in-out; /* Bikin perubahan navbar smooth */
+.navbar { 
+    position: fixed; top: 0; width: 100%; height: 44px; 
+    background: var(--surface-black); z-index: 1000; 
+    transition: all 0.4s ease-in-out;
 }
 .navbar.scrolled {
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-    background: rgba(250, 250, 250, 0.9); /* Sedikit transparan */
-    backdrop-filter: blur(10px); /* Efek kaca blur (Glassmorphism) */
-    padding: 15px 5%; /* Navbar sedikit mengecil agar elegan */
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(10px);
+}
+.nav-container { 
+    display: flex; justify-content: space-between; align-items: center; 
+    max-width: 1068px; margin: 0 auto; height: 100%; padding: 0 20px;
+}
+.nav-links { display: flex; gap: 24px; list-style: none; align-items: center; }
+.nav-links a, .logo-circle { font-size: 12px; font-weight: 400; letter-spacing: -0.12px; color: #ffffff; }
+.left-links a:hover { opacity: 0.7; }
+.logo-circle { font-weight: 600; }
+.right-links i { font-size: 14px; color: #ffffff; }
+.mobile-toggle { display: none; background: none; border: none; color: #fff; font-size: 16px; cursor: pointer; }
+
+/* =========================================
+   4. BUTTONS (APPLE PILL & LINKS)
+========================================= */
+.btn-solid { 
+    background: var(--action-blue); color: #ffffff !important; 
+    padding: 11px 22px; border-radius: 9999px; 
+    font-size: 17px; font-weight: 400; display: inline-block; border: none; cursor: pointer; 
+    transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.btn-solid:active { transform: scale(0.95); }
+.btn-text { color: var(--action-blue); font-size: 17px; margin-left: 20px; }
+.btn-text:hover { text-decoration: underline; }
+
+.btn-outline-light {
+    background: transparent; color: var(--sky-blue); 
+    border: 1px solid var(--sky-blue); padding: 11px 22px; 
+    border-radius: 9999px; font-size: 17px; display: inline-block;
+}
+.btn-outline-light:active { transform: scale(0.95); }
+
+/* =========================================
+   5. LAYOUT SECTIONS
+========================================= */
+/* --- HERO SECTION --- */
+.hero-section { background: var(--canvas-white); }
+.hero-content { display: flex; align-items: center; gap: 50px; max-width: 1068px; margin: 0 auto; min-height: 80vh; padding-top: 44px; }
+.hero-image-wrapper { flex: 1; display: flex; justify-content: center; }
+.hero-img { width: 100%; max-width: 450px; border-radius: 18px; box-shadow: var(--product-shadow); object-fit: cover; }
+.hero-text-wrapper { flex: 1; }
+
+/* --- ABOUT SECTION --- */
+.about-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 30px; max-width: 1068px; margin: 0 auto; align-items: stretch; }
+.about-bio, .about-stats { background: var(--canvas-white); border: 1px solid var(--hairline); border-radius: 18px; padding: 32px; }
+.about-bio p { color: var(--ink); margin-bottom: 16px; }
+.about-frame-container { display: flex; justify-content: center; align-items: center;}
+.about-frame img { width: 100%; max-width: 350px; border-radius: 18px; box-shadow: var(--product-shadow); object-fit: cover; }
+.about-stats { display: flex; flex-direction: column; justify-content: center; gap: 30px; text-align: center; }
+.stat-box h2 { font-size: 48px; font-weight: 600; color: var(--ink); margin-bottom: 5px;}
+.stat-box p { color: var(--ink-muted); font-size: 14px; }
+
+/* --- SKILLS & EXPERIENCE SECTION --- */
+/* --- SKILLS & EXPERIENCE SECTION --- */
+.exp-skill-container { 
+    display: grid; 
+    grid-template-columns: 1fr 1fr; 
+    gap: 30px; 
+    max-width: 1068px; 
+    margin: 0 auto; 
 }
 
-/* 2. Kelas untuk elemen yang disembunyikan SEBELUM di-scroll */
-.reveal {
-    opacity: 0;
-    transform: translateY(60px); /* Posisikan 60px lebih ke bawah */
-    transition: all 0.8s cubic-bezier(0.5, 0, 0, 1); /* Efek smooth melambat di akhir */
+.exp-list, .skill-list { 
+    background: var(--canvas-white); 
+    border: 1px solid var(--hairline); 
+    border-radius: 18px; 
+    padding: 40px; 
 }
 
-/* 3. Kelas saat elemen MUNCUL di layar */
-.reveal.active {
-    opacity: 1;
-    transform: translateY(0); /* Kembali ke posisi semula */
+/* Item Pengalaman (Disiapkan untuk garis animasi dari Paket B) */
+.exp-item { 
+    position: relative; 
+    margin-left: 35px; 
+    margin-bottom: 30px; 
 }
 
-/* Memberikan delay bertahap agar tidak muncul bersamaan */
+.exp-item h4 { 
+    font-size: 18px; 
+    font-weight: 600; 
+    margin-bottom: 5px; 
+}
+
+.exp-company { 
+    color: var(--ink-muted); 
+    font-weight: 400; 
+}
+
+.exp-date { 
+    font-size: 14px; 
+    color: var(--ink-muted); 
+    margin-bottom: 10px; 
+}
+
+.exp-desc { 
+    font-size: 15px; 
+    color: var(--ink); 
+}
+
+/* Container Keahlian */
+.skill-tags { 
+    display: flex; 
+    flex-wrap: wrap; 
+    gap: 10px; 
+}
+
+/* Desain Skill Badge Premium (Magnetic & Glow) */
+.skill-badge { 
+    background: var(--canvas-white); 
+    color: var(--ink); 
+    padding: 12px 20px; 
+    border-radius: 9999px; 
+    font-size: 14px; 
+    font-weight: 500;
+    border: 1px solid var(--hairline);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+    
+    /* Persiapan animasi pop-in */
+    opacity: 0; 
+    transform: translateY(20px);
+    will-change: transform;
+}
+
+/* Saat disentuh mouse: Garis biru, menyala (glow), membesar */
+.skill-badge:hover {
+    border-color: var(--action-blue);
+    color: var(--action-blue);
+    background: rgba(0, 102, 204, 0.04);
+    box-shadow: 0 10px 20px rgba(0, 102, 204, 0.15);
+}
+
+.skill-badge i { 
+    font-size: 16px; 
+    transition: color 0.3s ease; 
+}
+
+/* Kelas pen-trigger animasi dari JS */
+.skill-badge.show {
+    animation: skillPop 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+@keyframes skillPop {
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+/* --- PROJECTS SECTION --- */
+.projects-section { background: var(--surface-tile-1); color: #ffffff; }
+.projects-section .huge-title { color: #ffffff; }
+.projects-container { max-width: 1068px; margin: 0 auto; display: flex; flex-direction: column; gap: 80px; }
+.project-card-horizontal { display: flex; gap: 50px; align-items: center; }
+.project-img-box { flex: 1.2; }
+.project-info-box { flex: 1; }
+.project-img-box img { width: 100%; border-radius: 18px; box-shadow: var(--product-shadow); }
+.featured-tag { color: var(--sky-blue); font-size: 14px; font-weight: 600; margin-bottom: 10px; display: block; text-transform: uppercase;}
+.project-title { font-size: 34px; font-weight: 600; margin-bottom: 16px; letter-spacing: -0.374px; color: #ffffff;}
+.project-desc { color: var(--body-muted); margin-bottom: 30px; font-size: 16px;}
+
+/* --- CONTACT SECTION --- */
+.contact-section { background: var(--canvas-white); }
+.contact-wrapper { max-width: 700px; margin: 0 auto; }
+.modern-form { display: flex; flex-direction: column; gap: 20px; }
+.form-group-row { display: flex; gap: 20px; }
+.modern-form input, .modern-form textarea { width: 100%; padding: 16px 20px; border: 1px solid var(--hairline); border-radius: 18px; font-family: inherit; font-size: 17px; background: var(--canvas-white); color: var(--ink); outline: none; transition: 0.3s; }
+.modern-form input:focus, .modern-form textarea:focus { border-color: var(--action-blue); box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.2); }
+.modern-form textarea { resize: vertical; border-radius: 18px; }
+.alert-success { background: #d1fae5; color: #065f46; padding: 15px; border-radius: 12px; text-align: center; font-weight: 600; margin-bottom: 20px; }
+
+/* --- FOOTER --- */
+.footer-dark { background: var(--canvas-parchment); color: var(--ink-muted); text-align: center; padding: 60px 20px; font-size: 12px; letter-spacing: -0.12px; }
+
+/* =========================================
+   6. ANIMASI SCROLL REVEAL
+========================================= */
+.reveal { opacity: 0; transform: translateY(40px); transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.reveal.active { opacity: 1; transform: translateY(0); }
 .delay-1 { transition-delay: 0.1s; }
 .delay-2 { transition-delay: 0.2s; }
 .delay-3 { transition-delay: 0.3s; }
 
 /* =========================================
-   BENTO PRELOADER (GRID RAPI + 3D TILT PROJECT)
+   7. BENTO PRELOADER (LURUS & CLEAN)
 ========================================= */
-/* =========================================
-   BENTO PRELOADER (GRID LURUS & CLEAN MURNI)
-========================================= */
-#bento-preloader {
-    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-    width: 100vw; height: 100vh; background: #0f0f11;
-    z-index: 999999; display: flex; align-items: center; overflow: hidden;
-    transition: opacity 1s cubic-bezier(0.8, 0, 0.2, 1), visibility 1s;
-}
-
+#bento-preloader { position: fixed; top: 0; left: 0; right: 0; bottom: 0; width: 100vw; height: 100vh; background: #0f0f11; z-index: 999999; display: flex; align-items: center; overflow: hidden; transition: opacity 1s cubic-bezier(0.8, 0, 0.2, 1), visibility 1s; }
 #bento-preloader.hide { opacity: 0; visibility: hidden; pointer-events: none; }
-
 .bento-scroll-container { width: 100%; height: 100vh; overflow: hidden; display: flex; align-items: center; }
+.bento-track { display: flex; width: max-content; animation: scrollRight 16s linear infinite; }
+@keyframes scrollRight { 0% { transform: translateX(0%); } 100% { transform: translateX(calc(-100% / 3)); } }
 
-/* ANIMASI BERJALAN */
-.bento-track {
-    display: flex; width: max-content;
-    animation: scrollRight 16s linear infinite; 
-}
+.bento-group { display: grid; grid-template-rows: 240px 240px 240px; grid-template-columns: 460px 290px 340px 400px 260px; gap: 20px; padding-right: 20px; margin-left: 20px; }
+.b-card { background: var(--canvas-white); border-radius: 18px !important; border: 1px solid var(--hairline); padding: 24px !important; display: flex; flex-direction: column; justify-content: center; position: relative; overflow: hidden !important; box-shadow: none !important; transition: all 0.3s ease; }
+.b-card img { width: 100%; height: 100%; object-fit: cover; border-radius: 0; transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.b-card:hover img { transform: scale(1.08); }
+.b-card.dark-card { background: var(--surface-tile-1); border: none; color: #ffffff; }
+.card-proj-1, .card-proj-2, .card-proj-3, .card-photo, .card-misc-2 { padding: 0 !important; }
 
-@keyframes scrollRight {
-    0% { transform: translateX(0%); }
-    100% { transform: translateX(calc(-100% / 3)); }
-}
-
-/* --- MASTER GRID (RAPI & TERATUR) --- */
-.bento-group { 
-    display: grid; 
-    grid-template-rows: 240px 240px 240px; 
-    grid-template-columns: 460px 290px 340px 400px 260px; 
-    gap: 20px; padding-right: 20px; margin-left: 20px;
-}
-
-/* SEMUA KARTU LURUS & RAPI DI DALAM KOTAK */
-.b-card { 
-    background: #ffffff; 
-    border-radius: 32px; 
-    padding: 35px; 
-    display: flex; flex-direction: column; justify-content: center; position: relative;
-    overflow: hidden !important; /* Mencegah gambar tumpah ke luar kotak */
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-    transition: all 0.3s ease;
-}
-
-/* GAMBAR PRESISI 100% DI DALAM KOTAK */
-.b-card img { 
-    width: 100%; height: 100%; object-fit: cover; 
-    border-radius: 0; 
-    transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-
-/* Hover: Gambar hanya nge-zoom ke dalam sedikit tanpa merusak grid */
-.b-card:hover img {
-    transform: scale(1.08);
-}
-
-.b-card.dark-card { background: #1a1a1a; color: white; }
-
-/* Hapus padding khusus untuk kartu yang full gambar */
-.card-proj-1, .card-proj-2, .card-proj-3, .card-photo, .card-misc-2 {
-    padding: 0 !important;
-}
-
-/* --- PENGATURAN POSISI GRID TETRIS --- */
 .card-title { grid-row: 1 / 3; grid-column: 1 / 2; }
 .card-stat { grid-row: 3 / 4; grid-column: 1 / 2; align-items: center; text-align: center; }
 .card-proj-1 { grid-row: 1 / 3; grid-column: 2 / 3; }
-.card-text-1 { grid-row: 3 / 4; grid-column: 2 / 3; background: #f4f4f9; }
+.card-text-1 { grid-row: 3 / 4; grid-column: 2 / 3; background: var(--canvas-parchment); }
 .card-proj-2 { grid-row: 1 / 2; grid-column: 3 / 4; }
 .card-photo { grid-row: 2 / 4; grid-column: 3 / 4; }
 .card-proj-3 { grid-row: 1 / 2; grid-column: 4 / 6; }
 .card-misc-1 { grid-row: 2 / 4; grid-column: 4 / 5; }
 .card-misc-2 { grid-row: 2 / 3; grid-column: 5 / 6; }
-.card-misc-3 { grid-row: 3 / 4; grid-column: 5 / 6; align-items: center; text-align: center; background: #e9ecef; }
+.card-misc-3 { grid-row: 3 / 4; grid-column: 5 / 6; align-items: center; text-align: center; background: var(--canvas-parchment); }
 
-/* Titik Loading */
 .loading-dot { width: 12px; height: 12px; background: #111; border-radius: 50%; animation: bounce 1.4s infinite ease-in-out both; }
 .loading-dot:nth-child(1) { animation-delay: -0.32s; }
 .loading-dot:nth-child(2) { animation-delay: -0.16s; }
 @keyframes bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
+
+/* =========================================
+   9. RESPONSIVE DESIGN (TABLET & MOBILE)
+========================================= */
+@media (max-width: 1024px) {
+    .about-grid { grid-template-columns: 1fr; text-align: center; }
+    .about-frame-container { order: -1; }
+    .project-card-horizontal { flex-direction: column; }
+    .exp-skill-container { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 768px) {
+    .hero-content { flex-direction: column; text-align: center; padding-top: 60px; }
+    .hero-buttons { justify-content: center; }
+    .btn-text { display: block; margin-top: 15px; margin-left: 0; }
+    .form-group-row { flex-direction: column; }
+    .mobile-toggle { display: block; }
+    .nav-links.left-links { display: none; position: absolute; top: 44px; left: 0; width: 100%; background: var(--surface-black); flex-direction: column; padding: 20px 0; }
+    .nav-links.left-links.active { display: flex; }
+    .huge-title { font-size: 32px; }
+    .hero-title { font-size: 40px; }
+}
+
+/* =========================================
+   10 CUSTOM CURSOR & PROGRESS BAR
+========================================= */
+
+/* Sembunyikan kursor bawaan untuk perangkat PC/Laptop */
+@media (pointer: fine) {
+    body, a, button, input, textarea {
+        cursor: none !important;
+    }
+}
+
+/* Kursor Utama (Titik Kecil Elegan) */
+.custom-cursor {
+    position: fixed;
+    top: 0; left: 0;
+    width: 10px; 
+    height: 10px;
+    background-color: var(--action-blue);
+    border-radius: 50%;
+    pointer-events: none; /* Biar klik tembus ke bawahnya */
+    z-index: 9999999 !important;
+    transform: translate(-50%, -50%);
+    transition: width 0.3s ease, height 0.3s ease, background-color 0.3s ease, border 0.3s ease;
+}
+
+/* Saat Kursor di-hover ke tombol atau link (Membesar & Transparan) */
+.custom-cursor.hovered {
+    width: 45px;
+    height: 45px;
+    background-color: rgba(0, 102, 204, 0.1); /* Biru transparan Apple */
+    border: 1px solid var(--action-blue);
+}
+
+/* Garis Scroll di Atas Layar */
+.scroll-progress {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; 
+    height: 3px;
+    background-color: var(--action-blue);
+    z-index: 10001; /* Harus lebih tinggi dari Navbar */
+    transform-origin: left;
+    transform: scaleX(0); /* Awalnya 0 */
+}
+
+/* =========================================
+   11. ANIMASI KONTEN (AWWWARDS)
+========================================= */
+
+/* A. HERO TEXT REVEAL */
+.hero-title, .hero-subtitle, .hero-buttons {
+    opacity: 0;
+    transform: translateY(40px);
+    animation: heroReveal 1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+/* Karena preloader butuh 4 detik, kita mulai animasinya di detik 4.2 */
+.hero-title { animation-delay: 4.2s; }
+.hero-subtitle { animation-delay: 4.4s; }
+.hero-buttons { animation-delay: 4.6s; }
+
+@keyframes heroReveal {
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* B. TIMELINE LINE DRAWING */
+/* B. TIMELINE LINE DRAWING */
+.timeline-track {
+    position: absolute; left: 40px; top: 100px; bottom: 40px; 
+    width: 2px; background: var(--hairline);
+}
+.timeline-fill {
+    position: absolute; left: 40px; top: 100px; 
+    width: 2px; background: var(--action-blue); height: 0%; z-index: 1;
+    /* Kunci Penyelamat: Batasi tinggi maksimalnya agar tidak tembus ke bawah */
+    max-height: calc(100% - 140px); 
+    transition: height 0.1s ease-out; /* Biar berjalannya smooth */
+}
+
+/* Modifikasi item pengalaman lama agar presisi dengan garis */
+.exp-item { border-left: none !important; padding-left: 0 !important; margin-left: 35px; position: relative; }
+.exp-item::before { 
+    content: ''; position: absolute; left: -40.5px; top: 4px; 
+    width: 12px; height: 12px; background: var(--canvas-white); 
+    border: 2px solid var(--hairline); border-radius: 50%; z-index: 2; transition: all 0.4s ease;
+}
+.exp-item.active-dot::before {
+    border-color: var(--action-blue); background: var(--action-blue);
+    box-shadow: 0 0 10px rgba(0, 102, 204, 0.4); /* Efek nyala (glow) */
+}
+
+/* =========================================
+   12. PAKET C: MICRO-INTERACTIONS & UNIVERSAL EFFECTS
+========================================= */
+
+/* --- MAGNETIC BUTTON BASE --- */
+.btn-solid, .btn-outline-light {
+    transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), background-color 0.3s;
+    will-change: transform; /* Optimasi GPU agar animasinya mulus */
+}
+
+/* --- UNIVERSAL IMAGE EFFECTS (3D TILT & SWEEP) --- */
+/* 1. Pembungkus Foto (Untuk Proyek, Biografi, dan Hero Utama) */
+.project-img-box, .about-frame, .hero-image-wrapper {
+    position: relative;
+    perspective: 1000px; /* Memberikan kedalaman ruang 3D */
+    border-radius: 18px;
+    cursor: pointer;
+    transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.4s ease;
+    overflow: hidden; /* Agar kilauan cahayanya tidak bocor ke luar dari sudut */
+}
+
+/* 2. Pastikan gambar di dalamnya rapi */
+.project-img-box img, .about-frame img, .hero-image-wrapper img {
+    border-radius: 18px;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+    transform-style: preserve-3d;
+    will-change: transform;
+}
+
+/* 3. Efek Melayang saat di-Hover */
+.project-img-box:hover, .about-frame:hover, .hero-image-wrapper:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 30px 50px rgba(0,0,0,0.3);
+}
+
+/* 4. Garis Cahaya Kaca (Blink-Blink) menyapu dari kiri ke kanan */
+.project-img-box::after, .about-frame::after, .hero-image-wrapper::after {
+    content: '';
+    position: absolute;
+    top: 0; left: -150%;
+    width: 50%; height: 100%;
+    background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0) 100%);
+    transform: skewX(-20deg);
+    transition: all 0.7s ease;
+    z-index: 10;
+    pointer-events: none;
+    border-radius: 18px;
+}
+
+/* 5. Memicu Cahaya Menyapu saat kotak di-hover */
+.project-img-box:hover::after,
+.about-frame:hover::after,
+.hero-image-wrapper:hover::after {
+    left: 150%; 
+}
+
+/* =========================================
+   13. POKEMON-STYLE CARD INSPECTION MODAL
+========================================= */
+
+/* Base Modal Layar Penuh */
+.inspect-modal {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    z-index: 999999; display: flex; justify-content: center; align-items: center;
+    opacity: 0; pointer-events: none; transition: opacity 0.4s ease;
+}
+.inspect-modal.active { opacity: 1; pointer-events: auto; }
+
+/* Kaca Blur Latar Belakang */
+.inspect-overlay {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(15px);
+}
+
+/* Tombol Silang (Tutup) */
+.inspect-close {
+    position: absolute; top: 30px; right: 40px; background: transparent;
+    border: none; color: white; font-size: 30px; cursor: pointer; z-index: 10; transition: transform 0.3s;
+}
+.inspect-close:hover { transform: scale(1.2); color: var(--sky-blue); }
+
+/* Ruang 3D untuk Kartu */
+.inspect-card-container {
+    position: relative; perspective: 1500px; /* Jarak Kamera 3D */
+    z-index: 5; width: 90%; max-width: 450px; height: 65vh; 
+    display: flex; justify-content: center; align-items: center;
+}
+
+/* Fisik Kartu */
+.inspect-card {
+    position: relative; width: 100%; height: 100%;
+    transform-style: preserve-3d; 
+    transition: transform 0.1s ease-out; /* Pergerakan responsif mengikuti mouse */
+    border-radius: 24px;
+    box-shadow: 0 40px 80px rgba(0,0,0,0.8), 0 0 40px rgba(0, 102, 204, 0.4); /* Glow Biru */
+    overflow: hidden;
+}
+
+.inspect-card img {
+    width: 100%; height: 100%; object-fit: cover; border-radius: 24px; pointer-events: none;
+}
+
+/* Efek Kilap Kaca Hologram */
+.inspect-glare {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0) 60%);
+    mix-blend-mode: overlay; opacity: 0; pointer-events: none; transition: opacity 0.2s;
+}
+
+/* =========================================
+   MODUL 2: HERO LENGKAP & BLOCK REVEAL
+========================================= */
+
+/* --- 1. EFEK FLOATING (NAIK TURUN) --- */
+.hero-floating-box {
+    animation: floatImage 6s ease-in-out infinite;
+    z-index: 2;
+}
+@keyframes floatImage {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); } /* Melayang naik 20px */
+}
+
+/* --- 2. ORNAMEN PARALLAX HERO --- */
+.hero-parallax-shape {
+    position: absolute; 
+    border-radius: 50%; 
+    filter: blur(80px); 
+    opacity: 0.4; 
+    z-index: 0;
+    pointer-events: none;
+    transition: transform 0.2s ease-out; /* Agar parallax mulus */
+}
+.shape-1 { 
+    width: 350px; height: 350px; 
+    background: var(--action-blue); 
+    top: -10%; left: -10%; 
+}
+.shape-2 { 
+    width: 250px; height: 250px; 
+    background: #ff007f; /* Aksen magenta tipis */
+    bottom: -10%; right: 40%; 
+}
+
+/* --- 3. CURSOR TYPEWRITER (MESIN TIK) --- */
+.typewriter-cursor {
+    display: inline-block;
+    color: var(--action-blue);
+    font-weight: 300;
+    animation: blinkCursor 0.8s step-end infinite;
+}
+@keyframes blinkCursor {
+    50% { opacity: 0; }
+}
+/* Sembunyikan Subtitle & Button sebelum ngetik selesai */
+.hidden-before-typing {
+    opacity: 0;
+    transform: translateY(20px);
+}
+.show-after-typing {
+    animation: heroReveal 1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+/* --- 4. BLOCK IMAGE REVEAL (LEVEL 13) --- */
+/* Targetkan semua pembungkus gambar kita */
+.hero-image-wrapper::before, 
+.about-frame::before, 
+.project-img-box::before {
+    content: ''; 
+    position: absolute; top: 0; left: 0; 
+    width: 100%; height: 100%;
+    background: #111; /* Warna balok penutup */
+    z-index: 20; /* Harus di atas gambar */
+    transform-origin: right;
+    transition: transform 1s cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+/* Saat kotak terlihat di layar, baloknya bergeser ke kiri (ScaleX 0) */
+.revealed-block::before {
+    transform: scaleX(0);
+    transform-origin: left;
+}
+
+/* =========================================
+   MODUL 3: STICKY LAPTOP PROJECT (LEVEL 7)
+========================================= */
+
+.projects-sticky-wrapper {
+    display: flex;
+    align-items: flex-start;
+    gap: 60px;
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+}
+
+/* --- KOLOM KIRI (STICKY) --- */
+.laptop-sticky-container {
+    flex: 1;
+    position: sticky;
+    top: 25vh; /* Berhenti saat jaraknya 25% dari atas layar */
+    display: flex;
+    justify-content: center;
+}
+
+/* 1. Rangka Layar Macbook */
+.macbook-frame {
+    width: 100%;
+    max-width: 600px;
+    perspective: 1000px;
+    cursor: pointer;
+}
+
+.macbook-screen {
+    background: #000;
+    border-radius: 16px 16px 0 0;
+    padding: 15px 15px 25px 15px; /* Bezel hitam Apple */
+    border: 2px solid #222;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+    position: relative;
+    overflow: hidden;
+}
+
+/* 2. Isi Gambar Proyek */
+.macbook-screen img {
+    width: 100%;
+    aspect-ratio: 16/9;
+    object-fit: cover;
+    border-radius: 4px;
+    transition: opacity 0.4s ease, transform 0.6s ease;
+    opacity: 1;
+}
+
+/* 3. Kilap Kaca Diagonal (Level 15 Hover) */
+.macbook-screen::after {
+    content: ''; position: absolute; top: 0; left: -100%;
+    width: 50%; height: 200%;
+    background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0) 100%);
+    transform: rotate(30deg); transition: left 0.7s ease; pointer-events: none;
+}
+.macbook-frame:hover .macbook-screen::after { left: 150%; }
+
+/* 4. Bagian Bawah Macbook (Keyboard Base) */
+.macbook-base {
+    height: 14px;
+    background: linear-gradient(to bottom, #d4d4d4, #8a8a8a);
+    border-radius: 0 0 16px 16px;
+    position: relative;
+    width: 114%;
+    left: -7%; /* Melebar keluar layar */
+    box-shadow: inset 0px -2px 5px rgba(0,0,0,0.5), 0 15px 25px rgba(0,0,0,0.5);
+}
+/* Cekungan tengah buka laptop */
+.macbook-base::before {
+    content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+    width: 70px; height: 5px; background: #666; border-radius: 0 0 5px 5px;
+}
+
+/* --- KOLOM KANAN (TEKS SCROLL) --- */
+.projects-scroll-content {
+    flex: 1;
+    padding-bottom: 40vh; /* Beri ruang agar proyek terakhir bisa ter-scroll penuh */
+}
+
+/* Kotak Teks Proyek */
+.project-scroll-item {
+    min-height: 90vh; /* Tinggi dibuat panjang agar scrollnya terasa jauh */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    opacity: 0.2; /* Meredup saat belum fokus */
+    transform: translateX(30px);
+    transition: all 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.project-scroll-item.active {
+    opacity: 1; /* Menyala terang saat fokus */
+    transform: translateX(0);
+}
+
+/* Mode Mobile: Matikan Sticky agar numpuk ke bawah */
+@media (max-width: 992px) {
+    .projects-sticky-wrapper { flex-direction: column; }
+    .laptop-sticky-container { position: relative; top: 0; margin-bottom: 50px; z-index: 10; }
+    .project-scroll-item { min-height: auto; margin-bottom: 80px; opacity: 1; transform: none; }
+}
+
+/* =========================================
+   MODUL 4: CINEMATIC ENDING & FORM GLOW (LEVEL 8 & 20)
+========================================= */
+
+/* Persiapan transisi agar perubahannya halus (fade) tidak mendadak */
+body, .contact-section, .footer-dark {
+    transition: background-color 0.8s ease, color 0.8s ease;
+}
+
+/* --- KETIKA MODE CINEMATIC AKTIF --- */
+body.cinematic-mode {
+    background-color: #050505 !important;
+}
+
+body.cinematic-mode .contact-section,
+body.cinematic-mode .footer-dark {
+    background-color: transparent !important;
+}
+
+/* Kembalikan warna judul agar terlihat di background gelap */
+body.cinematic-mode .contact-section .huge-title,
+body.cinematic-mode .footer-dark p {
+    color: #ffffff !important;
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.2); /* Efek tulisan bercahaya tipis */
+}
+
+/* --- DESAIN FORM KETIKA MODE GELAP (GLOW EFFECT) --- */
+body.cinematic-mode .modern-form input,
+body.cinematic-mode .modern-form textarea {
+    background-color: rgba(255, 255, 255, 0.05); /* Kaca gelap */
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.1);
+    transition: all 0.4s ease;
+}
+
+/* Saat form diklik/difokuskan (Glow Biru khas Apple) */
+body.cinematic-mode .modern-form input:focus,
+body.cinematic-mode .modern-form textarea:focus {
+    background-color: rgba(0, 0, 0, 0.5);
+    border-color: var(--action-blue);
+    box-shadow: 0 0 20px rgba(0, 102, 204, 0.4);
+    transform: translateY(-3px); /* Kolom inputnya agak melompat naik */
+}
+
+/* Sesuaikan placeholder agar tetap terbaca */
+body.cinematic-mode .modern-form input::placeholder,
+body.cinematic-mode .modern-form textarea::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+/* =========================================
+   MODUL FINAL: ADVANCED CURSOR & MARQUEE FOOTER
+========================================= */
+
+/* --- 1. INFINITE MARQUEE (Teks Berjalan di Footer) --- */
+.infinite-marquee-container {
+    width: 100%;
+    overflow: hidden;
+    padding: 20px 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 30px;
+    background: transparent;
+}
+
+.marquee-content {
+    display: flex;
+    width: 200%; /* Dua kali lipat layar agar nyambung */
+    animation: marqueeScroll 20s linear infinite;
+}
+
+.marquee-content span {
+    width: 50%; 
+    display: flex;
+    justify-content: space-around;
+    color: rgba(255, 255, 255, 0.4); /* Warna abu samar agar elegan di mode gelap */
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    white-space: nowrap;
+}
+
+@keyframes marqueeScroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+/* --- 2. ADVANCED CUSTOM CURSOR TEXT ("VIEW") --- */
+.custom-cursor {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.cursor-text {
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+/* Saat cursor berubah wujud masuk mode VIEW */
+.custom-cursor.view-mode {
+    width: 75px !important;
+    height: 75px !important;
+    background-color: var(--action-blue) !important;
+    border: none !important;
+    mix-blend-mode: normal !important;
+}
+
+.custom-cursor.view-mode .cursor-text {
+    opacity: 1;
+}

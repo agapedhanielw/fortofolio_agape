@@ -5,14 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Portofolio | {% if profil %}{{ profil[2] }}{% else %}Agape{% endif %}</title>
     
-    <!-- Google Fonts & FontAwesome -->
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <!-- CSS Utama -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
+    <div class="scroll-progress" id="scroll-progress"></div>
+    <div class="custom-cursor" id="custom-cursor">
+        <span class="cursor-text"></span>
+    </div>
+    <div class="noise-overlay"></div>
+    <div class="aurora-gradient"></div>
+    <div class="grid-overlay"></div>
+    <div class="mouse-light" id="mouse-light"></div>
 
     <!-- NAVBAR -->
     <nav class="navbar">
@@ -50,7 +57,8 @@
             </button>
         </div>
     </nav>
-<!-- ========================================= -->
+    
+    <!-- ========================================= -->
     <!-- 1. TIRAI LOADING (PREMIUM GRID & 3D TILT) -->
     <!-- ========================================= -->
     <div id="bento-preloader">
@@ -146,25 +154,31 @@
     <!-- ========================================= -->
     <section id="hero" class="hero-section section-padding">
         <div class="hero-content">
-            <div class="hero-image-wrapper">
-                {% if profil and profil[13] %}
-                    <img src="{{ profil[13] }}" alt="Foto {{ profil[2] }}" class="hero-img">
-                {% else %}
-                    <div class="hero-img placeholder-box">Tambahkan Foto di Admin</div>
-                {% endif %}
-            </div>
-            <div class="hero-text-wrapper">
-                <h1 class="hero-title">
-                    {% if profil and profil|length > 15 and profil[15] %}
-                        {{ profil[15]|safe }}
+            <!-- Tambahan Parallax Ornamen Background -->
+            <div class="hero-parallax-shape shape-1"></div>
+            <div class="hero-parallax-shape shape-2"></div>
+
+            <!-- Dibungkus class 'hero-floating-box' agar tidak bentrok dengan efek 3D -->
+            <div class="hero-floating-box">
+                <div class="hero-image-wrapper block-reveal-target">
+                    {% if profil and profil[13] %}
+                        <img src="{{ profil[13] }}" alt="Foto {{ profil[2] }}" class="hero-img">
                     {% else %}
-                        Ex Data, Veritas<br>Inspired by<br>Λόγος
+                        <div class="hero-img placeholder-box">Tambahkan Foto di Admin</div>
                     {% endif %}
+                </div>
+            </div>
+            
+            <div class="hero-text-wrapper">
+                <!-- Teks akan diketik oleh JavaScript di sini -->
+                <h1 class="hero-title" id="typewriter-title">
+                    <span class="typewriter-text"></span><span class="typewriter-cursor">|</span>
                 </h1>
-                <p class="hero-subtitle">
+                
+                <p class="hero-subtitle hidden-before-typing">
                     Sebagai Mahasiswa {{ profil[10] if profil else '' }} di {{ profil[8] if profil else '' }}, saya berdedikasi untuk mengubah ide menjadi solusi digital yang inovatif. Jelajahi proyek dan karya terbaru saya.
                 </p>
-                <div class="hero-buttons">
+                <div class="hero-buttons hidden-before-typing">
                     <a href="#projects" class="btn-solid">Lihat Karya <i class="fas fa-external-link-square-alt"></i></a>
                     <a href="#contact" class="btn-text">Hubungi Saya</a>
                 </div>
@@ -197,17 +211,18 @@
             </div>
             
             <!-- Kolom Kanan: Statistik (Otomatis Dihitung) -->
+            <!-- Kolom Kanan: Statistik (Otomatis Dihitung) -->
             <div class="about-stats">
                 <div class="stat-box">
-                    <h2>{{ profil[11] if profil else '1' }}</h2>
+                    <h2><span class="count-up" data-target="{{ profil[11] if profil else '1' }}">0</span></h2>
                     <p>Semester Saat Ini</p>
                 </div>
                 <div class="stat-box">
-                    <h2>{{ projects|length }}+</h2>
+                    <h2><span class="count-up" data-target="{{ projects|length }}">0</span>+</h2>
                     <p>Proyek Diselesaikan</p>
                 </div>
                 <div class="stat-box">
-                    <h2>{{ skills|length }}+</h2>
+                    <h2><span class="count-up" data-target="{{ skills|length }}">0</span>+</h2>
                     <p>Keahlian Dikuasai</p>
                 </div>
             </div>
@@ -218,10 +233,16 @@
     <section id="skills" class="skills-section section-padding">
         <h2 class="huge-title text-center" style="font-size: 3rem;">Pengalaman & Keahlian</h2>
         <div class="exp-skill-container">
-            <div class="exp-list">
+            <!-- Kolom Pengalaman dengan Garis Animasi -->
+            <div class="exp-list" style="position: relative;">
                 <h3 class="sub-heading">RIWAYAT PENGALAMAN</h3>
+                
+                <!-- Trek Garis Latar & Garis Biru Berjalan -->
+                <div class="timeline-track" id="timeline-track"></div>
+                <div class="timeline-fill" id="timeline-fill"></div>
+
                 {% for exp in experiences %}
-                    <div class="exp-item">
+                    <div class="exp-item timeline-item">
                         <h4>{{ exp[2] }} <span class="exp-company">@ {{ exp[3] }}</span></h4>
                         <p class="exp-date">{{ exp[4] }}</p>
                         <p class="exp-desc">{{ exp[5]|safe }}</p>
@@ -245,16 +266,31 @@
     </section>
 
     <!-- PROJECTS SECTION (DARK MODE) -->
+    <!-- ========================================= -->
+    <!-- MODUL 3: STICKY LAPTOP PROJECT (LEVEL 7)  -->
+    <!-- ========================================= -->
     <section id="projects" class="projects-section section-padding dark-mode">
-        <h1 class="huge-title text-center text-light">Imajinasi Melampaui<br>Pengetahuan!</h1>
+        <h1 class="huge-title text-center text-light" style="margin-bottom: 80px;">Imajinasi Melampaui<br>Pengetahuan!</h1>
         
-        <div class="projects-container">
-            {% for p in projects %}
-                <div class="project-card-horizontal">
-                    <div class="project-img-box">
-                        <img src="{{ p[4] }}" alt="{{ p[2] }}">
+        <div class="projects-sticky-wrapper">
+            
+            <!-- KOLOM KIRI: LAPTOP APPLE LENGKET -->
+            <div class="laptop-sticky-container">
+                <div class="macbook-frame">
+                    <div class="macbook-screen block-reveal-target">
+                        <!-- Otomatis ambil gambar dari proyek pertama -->
+                        {% set first_img = projects[0][4] if projects|length > 0 else '' %}
+                        <img src="{{ first_img }}" alt="Project Screen" id="laptop-screen-img">
                     </div>
-                    <div class="project-info-box">
+                    <!-- Keyboard Base -->
+                    <div class="macbook-base"></div> 
+                </div>
+            </div>
+
+            <!-- KOLOM KANAN: TEKS PROYEK YANG BISA DI-SCROLL -->
+            <div class="projects-scroll-content">
+                {% for p in projects %}
+                    <div class="project-scroll-item" data-image="{{ p[4] }}">
                         <span class="featured-tag">Proyek Pilihan</span>
                         <h2 class="project-title">{{ p[2] }}</h2>
                         <p class="project-desc">{{ p[3]|safe }}</p>
@@ -264,10 +300,11 @@
                             {% endif %}
                         </div>
                     </div>
-                </div>
-            {% else %}
-                <p class="text-light text-center">Belum ada proyek yang ditambahkan.</p>
-            {% endfor %}
+                {% else %}
+                    <p class="text-light text-center">Belum ada proyek yang ditambahkan.</p>
+                {% endfor %}
+            </div>
+            
         </div>
     </section>
 
@@ -290,12 +327,35 @@
     </section>
 
     <footer class="footer-dark">
+        <!-- ========================================= -->
+        <!-- MODUL FINAL: INFINITE MARQUEE FOOTER      -->
+        <!-- ========================================= -->
+        <div class="infinite-marquee-container">
+            <div class="marquee-content">
+                <!-- Teks dicopy 2x agar efek putarannya (looping) tidak putus -->
+                <span>PYTHON ✦ FLASK ✦ SQL ✦ ORACLE ✦ JAVASCRIPT ✦ UI/UX ✦ HTML ✦ CSS ✦ BACKEND ✦</span>
+                <span>PYTHON ✦ FLASK ✦ SQL ✦ ORACLE ✦ JAVASCRIPT ✦ UI/UX ✦ HTML ✦ CSS ✦ BACKEND ✦</span>
+            </div>
+        </div>
+
         <!-- Pintu rahasia ke panel admin ada di tahun "2026" -->
         <p>&copy; <a href="/admin" style="color: inherit; text-decoration: none;">2026</a> {{ profil[2] if profil else 'Agape' }}.Portofolio 2026.</p>
     </footer>
 
-    <!-- Memanggil File JavaScript Eksternal (Pengganti Script Lama) -->
-    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <div id="card-inspect-modal" class="inspect-modal">
+        <div class="inspect-overlay"></div>
+        <button class="inspect-close"><i class="fas fa-times"></i></button>
+        <div class="inspect-card-container">
+            <div class="inspect-card">
+                <img id="inspect-img-target" src="" alt="Inspect">
+                <!-- Lapisan kilauan cahaya hologram -->
+                <div class="inspect-glare"></div>
+            </div>
+        </div>
+    </div>
 
+    <!-- Memanggil File JavaScript Eksternal (Pengganti Script Lama) -->
+    <script src="https://unpkg.com/@studio-freight/lenis@1.0.39/dist/lenis.min.js"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>
 </html>

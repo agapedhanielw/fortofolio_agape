@@ -1,7 +1,7 @@
-from flask import Blueprint, render_template, request, redirect, url_for, session
-from werkzeug.security import check_password_hash
 from sqlalchemy import text
 from utils import upload_ke_cloudinary
+from werkzeug.security import generate_password_hash, check_password_hash
+from flask import Blueprint, render_template, request, redirect, url_for, session, flash
 
 # 1. Membuat "Blueprint" (Pecahan rute khusus Admin)
 admin_bp = Blueprint('admin_bp', __name__)
@@ -191,7 +191,7 @@ def manage_experiences():
 
     return render_template('admin/experiences.html', experiences=data_exp, pesan=pesan)
 
-@admin_bp.route('/admin/experiences/delete/<int:id>')
+@admin_bp.route('/admin/experiences/delete/<int:id>', methods=['POST', 'GET'])
 def delete_experience(id):
     if 'user_id' not in session:
         return redirect(url_for('admin_bp.login'))
@@ -337,3 +337,57 @@ def edit_project(id):
         semua_proj = conn.execute(query_all, {"uid": user_id}).fetchall()
 
     return render_template('admin/projects.html', projects=semua_proj, edit_proj=edit_proj)
+
+@admin_bp.route('/admin/change-password', methods=['GET', 'POST'])
+def change_password():
+    # Pastikan user sudah login
+    if 'user_id' not in session:
+        return redirect(url_for('admin_bp.login'))
+
+    if request.method == 'POST':
+        old_password = request.form.get('old_password')
+        new_password = request.form.get('new_password')
+        confirm_password = request.form.get('confirm_password')
+
+        # 1. Cek apakah password baru dan konfirmasi cocok
+        if new_password != confirm_password:
+            flash('Password baru dan konfirmasi tidak cocok!', 'error')
+            return redirect(url_for('admin_bp.change_password'))
+
+        try:
+            from app import engine
+            from sqlalchemy import text
+            
+            with engine.connect() as conn:
+                # PERBAIKAN 1: Ambil 'password_hash' dari database (bukan 'password')
+                result = conn.execute(
+                    text("SELECT password_hash FROM users WHERE id = :uid"), 
+                    {"uid": session['user_id']}
+                ).fetchone()
+                
+                # Verifikasi apakah password lama yang diinput itu benar
+                if not result or not check_password_hash(result[0], old_password):
+                    flash('Password lama salah! Silakan coba lagi.', 'error')
+                    return redirect(url_for('admin_bp.change_password'))
+
+                # Hash password baru
+                hashed_pw = generate_password_hash(new_password)
+                
+                # PERBAIKAN 2: Update kolom 'password_hash' di database (bukan 'password')
+                conn.execute(
+                    text("UPDATE users SET password_hash = :new_pw WHERE id = :uid"), 
+                    {"new_pw": hashed_pw, "uid": session['user_id']}
+                )
+                conn.commit()
+
+            # Logout otomatis setelah ganti password
+            session.clear()
+            flash('Password berhasil diubah! Silakan login kembali dengan password baru.', 'success')
+            return redirect(url_for('admin_bp.login'))
+
+        except Exception as e:
+            print(f"Error System Ganti Password: {e}") # Cek terminal kalau masih error
+            flash('Terjadi kesalahan pada server database. Silakan coba beberapa saat lagi.', 'error')
+            return redirect(url_for('admin_bp.change_password'))
+
+    return render_template('admin/change_password.html')
